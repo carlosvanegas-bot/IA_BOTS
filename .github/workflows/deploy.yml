@@ -16,14 +16,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create config.js from Secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          echo "window.CONFIG = {
-            SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
-            SUPABASE_KEY: '${{ secrets.SUPABASE_KEY }}'
-          };" > config.js
+          printf 'window.CONFIG = {\n  SUPABASE_URL: "%s",\n  SUPABASE_KEY: "%s"\n};\n' "$SUPABASE_URL" "$SUPABASE_KEY" > config.js
+
+      - name: Verify config.js was created
+        run: |
+          if [ ! -f config.js ]; then
+            echo "ERROR: config.js was not created!"
+            exit 1
+          fi
+          echo "config.js created successfully:"
+          cat config.js
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: .
           branch: gh-pages
+          clean-exclude: |
+            .nojekyll
