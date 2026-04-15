@@ -405,15 +405,26 @@
 
     <!-- Calendar JS Logic -->
     <script>
-        const supabaseUrl = window.CONFIG.SUPABASE_URL;
-        const supabaseKey = window.CONFIG.SUPABASE_KEY;
-        const supabaseDb = window.supabase.createClient(supabaseUrl, supabaseKey);
+        const supabaseUrl = window.CONFIG?.SUPABASE_URL;
+        const supabaseKey = window.CONFIG?.SUPABASE_KEY;
+        
+        if (!supabaseUrl || !supabaseKey) {
+            console.error('❌ CONFIG ERROR: window.CONFIG is missing or incomplete. Check that config.js is deployed correctly and GitHub secrets (SUPABASE_URL, SUPABASE_KEY) are configured.');
+        }
+        
+        const supabaseDb = (supabaseUrl && supabaseKey) 
+            ? window.supabase.createClient(supabaseUrl, supabaseKey)
+            : null;
 
         // State - Format: bookings[YYYY-MM-DD] = array of booking objects { time, subject, email }
 
         let allBookings = {};
 
         async function fetchBookings() {
+            if (!supabaseDb) {
+                console.warn('Supabase not initialized - skipping fetchBookings.');
+                return;
+            }
             try {
                 const { data, error } = await supabaseDb
                     .from('reuniones')
@@ -651,6 +662,12 @@
                 
                 const meetingDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], hours, minutes, 0);
                 const meeting_time = meetingDate.toISOString();
+
+                if (!supabaseDb) {
+                    alert('Error: La base de datos no está configurada. Contacta al administrador.');
+                    btn.textContent = origText;
+                    return;
+                }
 
                 // Call Supabase
                 const { data, error } = await supabaseDb
