@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA BOTS: AI Mastery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="background">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="noise"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-item active">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="nav-item calendar-nav-btn" id="nav-calendar-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="calendar-icon" stroke="rgba(224, 223, 231, 0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <text x="12" y="17" font-size="7" font-weight="bold" fill="rgba(224, 223, 231, 0.9)" stroke="none" text-anchor="middle" font-family="sans-serif">31</text>
+                </svg>
+            </div>
+            <div class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect width="22" height="5" x="1" y="3" rx="1"/><line x1="10" x2="14" y1="12" y2="12"/></svg>
+            </div>
+            <div class="nav-item">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+        </nav>
+
+        <main class="content">
+            <!-- Header -->
+            <header class="header" style="position: relative; overflow: hidden; padding: 2rem; border-radius: 12px; border: 1px solid var(--glass-border); background: linear-gradient(135deg, rgba(138, 43, 226, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);">
+                <!-- Neural Network Canvas Background -->
+                <canvas id="neural-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8;"></canvas>
+                
+                <div class="logo" style="position: relative; z-index: 1;">
+                    <h1>IA <span>BOTS</span></h1>
+                </div>
+                <div class="logo-right" style="position: relative; z-index: 1;">
+                    <img src="logo.png" alt="Direktio Logo" style="height: 35px; object-fit: contain;">
+                </div>
+            </header>
+
+            <style>
+            .category-header {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                margin: 3rem 0 1.5rem 0;
+            }
+            .category-header:first-of-type {
+                margin-top: 1rem;
+            }
+            .category-header h3 {
+                color: #A09DB0;
+                font-size: 0.9rem;
+                font-weight: 600;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin: 0;
+            }
+            .category-header .divider {
+                flex-grow: 1;
+                height: 1px;
+                background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            }
+            </style>
+
+            <div class="category-header">
+                <h3>🏥 Salud & Operaciones</h3>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Main Gem Section -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #39FF14; text-shadow: 0 0 15px rgba(57, 255, 20, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                        Gomedisys IA
+                    </h2>
+                    <p class="micro-copy">Role: Master AI Controller | Efficiency: 99.9%</p>
+                    <p class="description">Este bot est&aacute; dise&ntilde;ado para actuar como una gu&iacute;a interactiva paso a paso que asegura la correcta navegaci&oacute;n en el portal de Gomedisys de Seguros Bol&iacute;var. Mi objetivo es facilitar la generaci&oacute;n y exportaci&oacute;n de reportes de citas m&eacute;dicas directamente a formatos manejables como Excel.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="https://gemini.google.com/gem/1qdeB0VIlL1K96NHaI5cESvXPGGBv2yGj" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect"></div>
+            </section>
+
+            <div class="category-header">
+                <h3>💼 Corporativo & Legal</h3>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Extra Dummy Main Gem 1 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #00E5FF; text-shadow: 0 0 15px rgba(0, 229, 255, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        Analista Financiero IA
+                    </h2>
+                    <p class="micro-copy">Role: Data AI Specialist | Efficiency: 98.5%</p>
+                    <p class="description">Este bot dummy est&aacute; dise&ntilde;ado para mostrar c&oacute;mo se ver&iacute;a otra interfaz m&aacute;s extensa. Aqu&iacute; ir&iacute;a su descripci&oacute;n detallada sobre modelos predictivos y KPIs clave.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: var(--accent-cyan);"></div>
+            </section>
+
+            <!-- Extra Dummy Main Gem 2 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #FF00FF; text-shadow: 0 0 15px rgba(255, 0, 255, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M21 12H3"/><path d="M12 3v18"/></svg>
+                        Asesor Legal IA
+                    </h2>
+                    <p class="micro-copy">Role: Compliance Checker | Efficiency: 95.1%</p>
+                    <p class="description">Otra tarjeta dummy grande para validar el dise&ntilde;o apilado. Funciona como gu&iacute;a virtual para revisar normatividad y formatos estandarizados.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: #FF00FF;"></div>
+            </section>
+
+            <div class="category-header">
+                <h3>📝 Creación de Contenido</h3>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Extra Dummy Main Gem 3 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #FFA500; text-shadow: 0 0 15px rgba(255, 165, 0, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Redactor de Contenidos IA
+                    </h2>
+                    <p class="micro-copy">Role: Copywriting Assistant | Efficiency: 99.1%</p>
+                    <p class="description">Especializado en crear contenido SEO optimizado, redacci&oacute;n de correos corporativos y desarrollo de art&iacute;culos t&eacute;cnicos con tono ajustado.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: #FFA500;"></div>
+            </section>
+
+            <div class="category-header">
+                <h3>🖥️ Ingeniería & Datos</h3>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Extra Dummy Main Gem 4 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #00FF00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                        Ingeniero de Datos IA
+                    </h2>
+                    <p class="micro-copy">Role: Data Architect | Efficiency: 97.4%</p>
+                    <p class="description">Asistente para estructuraci&oacute;n de bases de datos, creaci&oacute;n de pipelines de ETL, optimizaci&oacute;n de consultas SQL complejas y arquitecturas de Big Data.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: #00FF00;"></div>
+            </section>
+
+            <div class="category-header">
+                <h3>👥 Recursos Humanos</h3>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Extra Dummy Main Gem 5 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #FF3366; text-shadow: 0 0 15px rgba(255, 51, 102, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+                        Analista RRHH IA
+                    </h2>
+                    <p class="micro-copy">Role: Talent Management | Efficiency: 94.9%</p>
+                    <p class="description">Filtra perfiles, dise&ntilde;a pol&iacute;ticas empresariales modernas y crea matrices de evaluaci&oacute;n de desempe&ntilde;o para gesti&oacute;n de recursos humanos.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: #FF3366;"></div>
+            </section>
+
+            <div class="category-header">
+                <h3>🌍 Soporte & Calidad</h3>
+                <div class="divider"></div>
+            </div>
+
+            <!-- Extra Dummy Main Gem 6 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #FFFF00; text-shadow: 0 0 15px rgba(255, 255, 0, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        Traductor Universal IA
+                    </h2>
+                    <p class="micro-copy">Role: Polyglot System | Efficiency: 99.8%</p>
+                    <p class="description">Especialista en traducci&oacute;n y localizaci&oacute;n t&eacute;cnica de software y documentos de negocio, garantizando adaptaci&oacute;n cultural para 40+ idiomas.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: #FFFF00;"></div>
+            </section>
+
+            <!-- Extra Dummy Main Gem 7 -->
+            <section class="main-gem glass-card">
+                <div class="gem-info">
+                    <h2 style="color: #4DB8FF; text-shadow: 0 0 15px rgba(77, 184, 255, 0.6); display: flex; align-items: center; gap: 12px;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/></svg>
+                        Especialista en QA
+                    </h2>
+                    <p class="micro-copy">Role: Quality Control | Efficiency: 98.7%</p>
+                    <p class="description">Revisa metodolog&iacute;as &aacute;giles, dise&ntilde;a y ejecuta pruebas unitarias o ent-to-end automatizando reportes de errores en software.</p>
+                </div>
+                <div class="gem-actions">
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        <span>Open Gem</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="glow-effect" style="background: #4DB8FF;"></div>
+            </section>
+
+
+        </main>
+    </div>
+
+    <!-- Neural Network Background Animation Script -->
+    <script>
+        const canvas = document.getElementById('neural-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let width, height;
+
+            function resize() {
+                width = canvas.width = canvas.offsetWidth;
+                height = canvas.height = canvas.offsetHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const particles = [];
+            const particleCount = 60;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 1.0,
+                    vy: (Math.random() - 0.5) * 1.0,
+                    radius: Math.random() * 2 + 0.5
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = '#00E5FF'; // Cyan particles
+
+                for (let i = 0; i < particleCount; i++) {
+                    let p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Bounce off edges
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Connect points
+                    for (let j = i + 1; j < particleCount; j++) {
+                        let p2 = particles[j];
+                        let dx = p.x - p2.x;
+                        let dy = p.y - p2.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 70) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(138, 43, 226, ${1 - dist/70})`; // Violet connecting lines
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+    </script>
+
+    <!-- Calendar Booking Modal & UI Interaction Flow -->
+    <div class="calendar-modal" id="calendarModal">
+        <div class="calendar-container">
+            <!-- Header with Close Button -->
+            <div class="calendar-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <h2 style="display: flex; align-items: center; gap: 12px; margin: 0;">
+                        <span id="calendarMonthTitle" style="color: var(--accent-cyan);"></span>
+                        Agendamiento de horario
+                    </h2>
+                    <img src="logo_platzi.png" alt="Logo Platzi" style="height: 40px; object-fit: contain;">
+                </div>
+                <button class="close-calendar" id="closeCalendarBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <!-- Calendar Grid Left Side -->
+            <div class="calendar-grid-wrapper">
+                <div class="calendar-view-main">
+                    <div class="calendar-days-header">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+                    <div class="calendar-grid" id="dynamicCalendarGrid">
+                        <!-- Automatically filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Slide-in Booking Panel -->
+                <div class="booking-panel" id="bookingPanel">
+                    <div class="booking-panel-header">
+                        <h3>Book an Appointment</h3>
+                        <p class="subtitle" id="bookingSubtitle">Date</p>
+                        <button class="close-booking" id="closeBookingBtn">&times;</button>
+                    </div>
+                    <form class="booking-form" id="bookingForm">
+                        <div class="form-group">
+                            <label>Select Time</label>
+                            <select id="bookingTime" required>
+                                <option value="" disabled selected>Choose a time slot</option>
+                                <option value="09:00 AM">09:00 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="11:30 AM">11:30 AM</option>
+                                <option value="02:00 PM">02:00 PM</option>
+                                <option value="04:00 PM">04:00 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" id="bookingSubject" placeholder="e.g. Project Review Meeting" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Attendee Email</label>
+                            <div class="input-with-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                <input type="email" id="bookingEmail" placeholder="name@company.com" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-confirm-booking">Confirm Booking</button>
+                        <div id="bookingSuccessMessage" style="display: none; margin-top: 15px; padding: 12px; border-radius: 8px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); color: #00E5FF; font-size: 0.85rem; text-align: center; animation: slideUp 0.3s ease;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                            ¡Correo de confirmación enviado con tu invitación!
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <script src="config.js"></script>
+    </div>
+
+    <!-- Calendar JS Logic -->
+    <script>
+        const supabaseUrl = window.CONFIG.SUPABASE_URL;
+        const supabaseKey = window.CONFIG.SUPABASE_KEY;
+        const supabaseDb = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // State - Format: bookings[YYYY-MM-DD] = array of booking objects { time, subject, email }
+
+        let allBookings = {};
+
+        async function fetchBookings() {
+            try {
+                const { data, error } = await supabaseDb
+                    .from('reuniones')
+                    .select('meeting_time, subject, attendee_email');
+
+                if (error) throw error;
+
+                // Reset local state to ensure we don't duplicate if called multiple times
+                // but keep it as an object
+                const newBookings = {};
+
+                data.forEach(booking => {
+                    const dateObj = new Date(booking.meeting_time);
+                    
+                    // Format date key YYYY-MM-DD
+                    const year = dateObj.getFullYear();
+                    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const dd = String(dateObj.getDate()).padStart(2, '0');
+                    const dateKey = `${year}-${mm}-${dd}`;
+
+                    // Format time slot e.g. "09:00 AM" to match ALL_TIME_SLOTS
+                    let hours = dateObj.getHours();
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    let h12 = hours % 12;
+                    h12 = h12 ? h12 : 12; 
+                    const timeSlot = `${String(h12).padStart(2, '0')}:${minutes} ${ampm}`;
+
+                    if (!newBookings[dateKey]) {
+                        newBookings[dateKey] = [];
+                    }
+                    newBookings[dateKey].push({
+                        time: timeSlot,
+                        subject: booking.subject,
+                        email: booking.attendee_email
+                    });
+                });
+
+                allBookings = newBookings;
+                
+                // If calendar modal or grid exists, we might need a re-render
+                const grid = document.getElementById('dynamicCalendarGrid');
+                if (grid && grid.innerHTML !== '') {
+                    // We can't easily call renderCalendar from here if it's trapped in a closure,
+                    // but we'll call fetchBookings properly in the lifecycle.
+                }
+            } catch (err) {
+                console.error('Error fetching bookings:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navBtn = document.getElementById('nav-calendar-btn');
+            const calendarModal = document.getElementById('calendarModal');
+            const closeCalendarBtn = document.getElementById('closeCalendarBtn');
+            
+            const calendarTitle = document.getElementById('calendarMonthTitle');
+            const calendarGrid = document.getElementById('dynamicCalendarGrid');
+
+            const bookingPanel = document.getElementById('bookingPanel');
+            const closeBookingBtn = document.getElementById('closeBookingBtn');
+            const bookingSubtitle = document.getElementById('bookingSubtitle');
+            const bookingForm = document.getElementById('bookingForm');
+            const bookingTimeSelect = document.getElementById('bookingTime');
+
+            // State
+            // Format: bookings[YYYY-MM-DD] = array of booking objects { time, subject, email }
+            // let allBookings = {}; // Now global
+            let selectedDateStr = null; // YYYY-MM-DD format
+            let selectedDayElement = null;
+
+            const ALL_TIME_SLOTS = [
+                "09:00 AM",
+                "10:00 AM",
+                "11:30 AM",
+                "02:00 PM",
+                "04:00 PM"
+            ];
+
+            // Render current month dynamic calendar
+            function renderCalendar() {
+                calendarGrid.innerHTML = ''; // reset grid
+
+                const today = new Date();
+                const currentMonth = today.getMonth(); // 0-11
+                const currentYear = today.getFullYear();
+                const currentDate = today.getDate(); // 1-31
+
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                calendarTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+                // Get first day of month (0-6, Sun-Sat)
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                // Get number of days in month
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+                // Create empty slots for days before 1st of month
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'calendar-day empty';
+                    calendarGrid.appendChild(emptyDiv);
+                }
+
+                // Render actual days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'calendar-day';
+                    dayDiv.textContent = day;
+
+                    // Pad month and day for consistent YYYY-MM-DD format key
+                    const mm = String(currentMonth + 1).padStart(2, '0');
+                    const dd = String(day).padStart(2, '0');
+                    const dateKey = `${currentYear}-${mm}-${dd}`;
+
+                    dayDiv.dataset.date = dateKey;
+
+                    // Check if past day
+                    if (day < currentDate) {
+                        dayDiv.classList.add('disabled-day');
+                    } else {
+                        dayDiv.classList.add('interactive-day');
+                        dayDiv.addEventListener('click', () => handleDayClick(dayDiv, day, monthNames[currentMonth], currentYear, dateKey));
+                    }
+
+                    // Check visual dots for existing bookings
+                    updateDayVisuals(dayDiv, dateKey);
+
+                    calendarGrid.appendChild(dayDiv);
+                }
+            }
+
+            function updateDayVisuals(dayDiv, dateKey) {
+                // Remove existing dots container if any
+                const existingContainer = dayDiv.querySelector('.dots-container');
+                if (existingContainer) existingContainer.remove();
+
+                if (allBookings[dateKey] && allBookings[dateKey].length > 0) {
+                    const dotsContainer = document.createElement('div');
+                    dotsContainer.className = 'dots-container';
+                    
+                    // Cap visual dots to 3 to prevent overflow
+                    const numDots = Math.min(allBookings[dateKey].length, 3);
+                    for(let i=0; i<numDots; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'busy-dot';
+                        dotsContainer.appendChild(dot);
+                    }
+                    if (allBookings[dateKey].length > 3) {
+                        const plusSign = document.createElement('span');
+                        plusSign.textContent = '+';
+                        plusSign.style.fontSize = '8px';
+                        plusSign.style.lineHeight = '1';
+                        dotsContainer.appendChild(plusSign);
+                    }
+
+                    dayDiv.appendChild(dotsContainer);
+                }
+            }
+
+            function handleDayClick(dayDiv, dayNum, monthName, year, dateKey) {
+                // Deselect previous
+                if (selectedDayElement) {
+                    selectedDayElement.classList.remove('selected');
+                }
+
+                if (selectedDateStr === dateKey && bookingPanel.classList.contains('active')) {
+                    // Clicking the same day to toggle close
+                    bookingPanel.classList.remove('active');
+                    selectedDateStr = null;
+                    selectedDayElement = null;
+                    return;
+                }
+
+                // New selection
+                selectedDateStr = dateKey;
+                selectedDayElement = dayDiv;
+                dayDiv.classList.add('selected');
+                
+                // Update Panel UI
+                bookingSubtitle.textContent = `${monthName} ${dayNum}, ${year}`;
+                
+                // Update Time Dropdown options
+                updateTimeOptions(dateKey);
+
+                bookingPanel.classList.add('active');
+            }
+
+            function updateTimeOptions(dateKey) {
+                const bookedSlotsForDay = allBookings[dateKey] ? allBookings[dateKey].map(b => b.time) : [];
+
+                bookingTimeSelect.innerHTML = '<option value="" disabled selected>Choose a time slot</option>';
+                
+                let hasAvailable = false;
+                ALL_TIME_SLOTS.forEach(timeSlot => {
+                    if (!bookedSlotsForDay.includes(timeSlot)) {
+                        const opt = document.createElement('option');
+                        opt.value = timeSlot;
+                        opt.textContent = timeSlot;
+                        bookingTimeSelect.appendChild(opt);
+                        hasAvailable = true;
+                    }
+                });
+
+                if (!hasAvailable) {
+                    const opt = document.createElement('option');
+                    opt.value = "";
+                    opt.disabled = true;
+                    opt.selected = true;
+                    opt.textContent = "No available slots";
+                    bookingTimeSelect.appendChild(opt);
+                }
+            }
+
+            // Handle Booking Submit
+            bookingForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const time = document.getElementById('bookingTime').value;
+                const subject = document.getElementById('bookingSubject').value;
+                const email = document.getElementById('bookingEmail').value;
+
+                if (!time || !selectedDateStr) return;
+                
+                const btn = bookingForm.querySelector('button[type="submit"]');
+                const origText = btn.textContent;
+                btn.textContent = "Booking...";
+
+                // Construct ISO meeting_time
+                const dateParts = selectedDateStr.split('-');
+                const timeParts = time.split(' ');
+                const hm = timeParts[0].split(':');
+                let hours = parseInt(hm[0], 10);
+                const minutes = parseInt(hm[1], 10);
+                if (timeParts[1] === 'PM' && hours < 12) hours += 12;
+                if (timeParts[1] === 'AM' && hours === 12) hours = 0;
+                
+                const meetingDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], hours, minutes, 0);
+                const meeting_time = meetingDate.toISOString();
+
+                // Call Supabase
+                const { data, error } = await supabaseDb
+                    .from('reuniones')
+                    .insert([
+                        { 
+                            meeting_time: meeting_time, 
+                            subject: subject, 
+                            attendee_email: email 
+                        }
+                    ]);
+
+                if (error) {
+                    console.error('Supabase Error:', error);
+                    alert('Error guardando la reunión. Verifica la consola.');
+                    btn.textContent = origText;
+                    return;
+                }
+
+                if (!allBookings[selectedDateStr]) {
+                    allBookings[selectedDateStr] = [];
+                }
+
+
+                // Save booking
+                allBookings[selectedDateStr].push({ time, subject, email });
+
+                // Update UI Visuals immediately
+                if (selectedDayElement) {
+                    updateDayVisuals(selectedDayElement, selectedDateStr);
+                }
+                
+                // Refresh dropdown so the same time can't be booked again
+                updateTimeOptions(selectedDateStr);
+
+                // Reset form inputs (except time which was rebuilt)
+                document.getElementById('bookingSubject').value = '';
+                document.getElementById('bookingEmail').value = '';
+
+                // Show success effect (visual cue inside button)
+                btn.textContent = "Booked!";
+                btn.style.background = "#00E5FF";
+                btn.style.color = "#000";
+
+                // Show success message container
+                const successMsg = document.getElementById('bookingSuccessMessage');
+                if (successMsg) {
+                    successMsg.style.display = 'block';
+                }
+                
+                setTimeout(() => {
+                    btn.textContent = origText;
+                    btn.style.background = "linear-gradient(135deg, #B200FF, #8A2BE2)";
+                    btn.style.color = "white";
+                    
+                    // Hide message after a while
+                    setTimeout(() => {
+                        if (successMsg) successMsg.style.display = 'none';
+                    }, 4000);
+                }, 1500);
+            });
+
+            // Navigation and state toggles
+            if(navBtn && calendarModal) {
+                navBtn.addEventListener('click', async () => {
+                    await fetchBookings(); // Fetch latest before rendering
+                    renderCalendar(); 
+                    calendarModal.classList.add('active');
+                });
+            }
+
+            if(closeCalendarBtn) {
+                closeCalendarBtn.addEventListener('click', () => {
+                    calendarModal.classList.remove('active');
+                    bookingPanel.classList.remove('active');
+                    if (selectedDayElement) selectedDayElement.classList.remove('selected');
+                    selectedDateStr = null;
+                });
+            }
+
+            if(closeBookingBtn) {
+                closeBookingBtn.addEventListener('click', () => {
+                    bookingPanel.classList.remove('active');
+                    if (selectedDayElement) selectedDayElement.classList.remove('selected');
+                    selectedDateStr = null;
+                });
+            }
+
+            // Initial fetch on load
+            fetchBookings();
+        });
+    </script>
+
+    <!-- Chatbot Widget -->
+    <style>
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-toggle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00E5FF, #8A2BE2);
+            border: none;
+            color: #050408;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chat-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+        }
+
+        .chat-panel {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 450px;
+            background: rgba(13, 11, 26, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .chat-panel.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: #A09DB0;
+            cursor: pointer;
+        }
+        .close-chat:hover { color: #fff; }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message.bot {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            color: #E0DFE7;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message.user {
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: #fff;
+            outline: none;
+        }
+
+        .chat-input input:focus {
+            border-color: #00E5FF;
+        }
+
+        .chat-input button {
+            background: #00E5FF;
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-input button:hover {
+            background: #fff;
+            transform: scale(1.05);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 5px 10px;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+        }
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: #00E5FF;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Quick Replies CSS */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-reply-btn {
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            color: #00E5FF;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-reply-btn:hover {
+            background: rgba(138, 43, 226, 0.35);
+            border-color: #00E5FF;
+            color: #fff;
+        }
+    </style>
+
+    <div class="chatbot-container">
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-header">
+                <h3>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                    Direktio Asistente
+                </h3>
+                <button class="close-chat" id="closeChatBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    ¡Hola! 👋 Soy el asistente de Direktio. Estoy aquí para guiarte en nuestro catálogo de IA.
+                    <div class="quick-replies">
+                        <button class="quick-reply-btn" onclick="sendQuickReply('¿Qué opciones tienes?')">Ver opciones</button>
+                        <button class="quick-reply-btn" onclick="sendQuickReply('Bots de salud')">Sector Salud</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input" id="chatInputArea">
+                <input type="text" id="chatInput" placeholder="Escribe un mensaje..." autocomplete="off">
+                <button id="sendChatBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
+        
+        <button class="chat-toggle-btn" id="chatToggleBtn">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        // Global function for quick replies
+        window.sendQuickReply = function(text) {
+            const input = document.getElementById('chatInput');
+            input.value = text;
+            document.getElementById('sendChatBtn').click();
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('chatToggleBtn');
+            const closeBtn = document.getElementById('closeChatBtn');
+            const chatPanel = document.getElementById('chatPanel');
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendChatBtn');
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Open/Close chat
+            toggleBtn.addEventListener('click', () => {
+                chatPanel.classList.toggle('active');
+                if (chatPanel.classList.contains('active')) {
+                    chatInput.focus();
+                }
+            });
+
+            closeBtn.addEventListener('click', () => {
+                chatPanel.classList.remove('active');
+            });
+
+            const greetingsRegex = /\b(hola|buenos|buenas|saludos|hey|qué tal|que tal)\b/i;
+            const farewellsRegex = /\b(adios|adiós|chao|hasta luego|nos vemos|bye)\b/i;
+            const menuRegex = /\b(menu|menú|opciones|ayuda|qué puedes hacer|que puedes|servicios)\b/i;
+
+            // Send message logic
+            function processMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                // Strip HTML to prevent XSS from quick replies
+                const div = document.createElement('div');
+                div.textContent = text;
+                const safeText = div.innerHTML;
+
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.innerHTML = safeText;
+                chatMessages.appendChild(userMsg);
+                chatInput.value = '';
+                
+                scrollToBottom();
+
+                // Show typing indicator
+                const typingBlock = document.createElement('div');
+                typingBlock.className = 'message bot typing-indicator';
+                typingBlock.innerHTML = '<span></span><span></span><span></span>';
+                chatMessages.appendChild(typingBlock);
+                scrollToBottom();
+
+                // Mock bot response
+                setTimeout(() => {
+                    typingBlock.remove();
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'message bot';
+                    
+                    const lowerText = text.toLowerCase();
+                    
+                    // Logic routing
+                    if (greetingsRegex.test(lowerText)) {
+                        botMsg.innerHTML = "¡Hola nuevamente! 👋 ¿Qué tipo de herramientas o roles estás buscando automatizar hoy?<br><br><div class='quick-replies'><button class='quick-reply-btn' onclick='sendQuickReply(\"Opciones de bots\")'>Ver opciones</button></div>";
+                    } else if (farewellsRegex.test(lowerText)) {
+                        botMsg.textContent = "¡Ha sido un placer ayudarte! Cierra esta ventana si ya terminaste, o escríbeme si me necesitas de nuevo. ¡Hasta pronto! ✨";
+                    } else if (menuRegex.test(lowerText)) {
+                        botMsg.innerHTML = "Aquí tienes las categorías principales en las que puedo guiarte:<br><br>• 🏥 Salud y Médicos<br>• 💼 Finanzas y Legal<br>• 📝 Contenido<br>• 🖥️ Datos y Código<br><br>¿Cuál de estas áreas te interesa explorar?<br><div class='quick-replies'><button class='quick-reply-btn' onclick='sendQuickReply(\"Salud\")'>Salud</button><button class='quick-reply-btn' onclick='sendQuickReply(\"Finanzas\")'>Finanzas</button><button class='quick-reply-btn' onclick='sendQuickReply(\"Contenido\")'>Contenido</button><button class='quick-reply-btn' onclick='sendQuickReply(\"Datos\")'>Datos</button></div>";
+                    } else if (lowerText.includes('gomedisys') || lowerText.includes('medico') || lowerText.includes('salud')) {
+                        botMsg.textContent = "El bot 'Gomedisys IA' está diseñado para generar reportes en Seguros Bolívar. Puedes encontrarlo arriba en la sección 'Salud & Operaciones'.";
+                    } else if (lowerText.includes('redactor') || lowerText.includes('contenido')) {
+                        botMsg.textContent = "'Redactor de Contenidos IA' es ideal para ti. Redacta correos y da soporte SEO. Está listado bajo 'Creación de Contenido'.";
+                    } else if (lowerText.includes('datos') || lowerText.includes('codigo') || lowerText.includes('ingenier')) {
+                        botMsg.innerHTML = "Para software y desarrollo contamos con:<br>• Ingeniero de Datos IA<br>• Especialista en QA<br>Búscalos en nuestra categoría de Ingeniería & Datos.";
+                    } else if (lowerText.includes('finanzas') || lowerText.includes('legal')) {
+                        botMsg.textContent = "Excelente. Tenemos a 'Analista Financiero IA' y 'Asesor Legal IA' listos para ayudar en la sección 'Corporativo & Legal'.";
+                    } else if (lowerText.includes('gracias')) {
+                        botMsg.textContent = "¡De nada! Recuerda que estoy aquí 24/7 si necesitas más apoyo con tus IA Gems.";
+                    } else {
+                        botMsg.innerHTML = "Interesante. No tengo una respuesta exacta para eso, pero te animo a explorar las áreas especializadas de Direktio IA Gems. ¿Te muestro las opciones?<br><div class='quick-replies'><button class='quick-reply-btn' onclick='sendQuickReply(\"Menu de opciones\")'>Sí, mostrar menú</button></div>";
+                    }
+                    
+                    chatMessages.appendChild(botMsg);
+                    scrollToBottom();
+                }, 1000); // lower typing time slightly for responsiveness
+            }
+
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            sendBtn.addEventListener('click', processMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') processMessage();
+            });
+        });
+    </script>
+</body>
+</html>
