@@ -380,6 +380,10 @@
                                 <option value="04:00 PM">04:00 PM</option>
                             </select>
                         </div>
+                        <!-- Visible error when no time selected -->
+                        <div id="bookingTimeError" style="display:none; padding: 8px 12px; border-radius: 8px; background: rgba(255,60,60,0.15); border: 1px solid rgba(255,60,60,0.5); color: #ff6b6b; font-size: 0.82rem; text-align: center;">
+                            ⚠️ Por favor selecciona un horario antes de confirmar.
+                        </div>
                         <div class="form-group">
                             <label>Subject</label>
                             <input type="text" id="bookingSubject" placeholder="e.g. Project Review Meeting" required>
@@ -405,16 +409,21 @@
 
     <!-- Calendar JS Logic -->
     <script>
-        const supabaseUrl = window.CONFIG?.SUPABASE_URL;
-        const supabaseKey = window.CONFIG?.SUPABASE_KEY;
-        
-        if (!supabaseUrl || !supabaseKey) {
-            console.error('❌ CONFIG ERROR: window.CONFIG is missing or incomplete. Check that config.js is deployed correctly and GitHub secrets (SUPABASE_URL, SUPABASE_KEY) are configured.');
+        let supabaseDb = null;
+        try {
+            const supabaseUrl = window.CONFIG?.SUPABASE_URL;
+            const supabaseKey = window.CONFIG?.SUPABASE_KEY;
+            if (supabaseUrl && supabaseKey && window.supabase) {
+                supabaseDb = window.supabase.createClient(supabaseUrl, supabaseKey);
+                console.log('✅ Supabase inicializado correctamente.');
+            } else {
+                console.error('❌ CONFIG ERROR: window.CONFIG o window.supabase no están disponibles.', {
+                    CONFIG: !!window.CONFIG, supabase: !!window.supabase
+                });
+            }
+        } catch(e) {
+            console.error('❌ Error inicializando Supabase:', e);
         }
-        
-        const supabaseDb = (supabaseUrl && supabaseKey) 
-            ? window.supabase.createClient(supabaseUrl, supabaseKey)
-            : null;
 
         // State - Format: bookings[YYYY-MM-DD] = array of booking objects { time, subject, email }
 
@@ -422,7 +431,7 @@
 
         async function fetchBookings() {
             if (!supabaseDb) {
-                console.warn('Supabase not initialized - skipping fetchBookings.');
+                console.warn('⚠️ Supabase no inicializado - saltando fetchBookings.');
                 return;
             }
             try {
@@ -430,7 +439,11 @@
                     .from('reuniones')
                     .select('meeting_time, subject, attendee_email');
 
-                if (error) throw error;
+                if (error) {
+                    console.error('❌ Supabase fetchBookings error:', error);
+                    throw error;
+                }
+                console.log(`✅ Reuniones cargadas: ${data.length} registros.`);
 
                 // Reset local state to ensure we don't duplicate if called multiple times
                 // but keep it as an object
@@ -609,6 +622,14 @@
                 // Update Time Dropdown options
                 updateTimeOptions(dateKey);
 
+                // Reset form scroll to top so 'Select Time' is always visible
+                const bForm = document.getElementById('bookingForm');
+                if (bForm) bForm.scrollTop = 0;
+                
+                // Clear any previous validation error
+                const prevErr = document.getElementById('bookingTimeError');
+                if (prevErr) prevErr.style.display = 'none';
+
                 bookingPanel.classList.add('active');
             }
 
@@ -645,7 +666,19 @@
                 const subject = document.getElementById('bookingSubject').value;
                 const email = document.getElementById('bookingEmail').value;
 
-                if (!time || !selectedDateStr) return;
+                // Show visible error if time not selected
+                const timeErrEl = document.getElementById('bookingTimeError');
+                if (!time) {
+                    if (timeErrEl) {
+                        timeErrEl.style.display = 'block';
+                        setTimeout(() => { timeErrEl.style.display = 'none'; }, 3000);
+                    }
+                    // Scroll to top to show time selector
+                    e.target.scrollTop = 0;
+                    return;
+                }
+                if (!selectedDateStr) return;
+                if (timeErrEl) timeErrEl.style.display = 'none';
                 
                 const btn = bookingForm.querySelector('button[type="submit"]');
                 const origText = btn.textContent;
