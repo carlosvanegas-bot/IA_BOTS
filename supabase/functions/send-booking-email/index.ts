@@ -32,6 +32,8 @@ serve(async (req) => {
     hours = hours % 12;
     hours = hours ? hours : 12; 
 
+    const manualFormattedDate = `${day} de ${month} de ${year}, ${hours}:${minutes} ${ampm}`;
+
     // Formatear fecha para ICS: YYYYMMDDTHHMMSSZ
     const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
