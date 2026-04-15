@@ -404,17 +404,7 @@
                 </div>
             </div>
         </div>
-    <!-- Dev local: config.js carga las credenciales reales -->
-    <script src="config.js" onerror=""></script>
-    <!-- Producción: el workflow reemplaza los placeholders via sed antes del deploy -->
-    <script>
-        if (!window.CONFIG) {
-            window.CONFIG = {
-                SUPABASE_URL: '__SUPABASE_URL__',
-                SUPABASE_KEY: '__SUPABASE_KEY__'
-            };
-        }
-    </script>
+    <script src="config.js"></script>
     </div>
 
     <!-- Calendar JS Logic -->
