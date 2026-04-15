@@ -64,16 +64,22 @@ serve(async (req) => {
     const emailResponse = await resend.emails.send({
       from: 'Direktio <reservas@direktio.com>',
       to: attendee_email,
-      subject: 'Reserva Confirmada Platzi',
+      subject: 'Reserva Confirmada en Direktio IA Gems',
       html: `Hola, hemos recibido tu solicitud. Tu espacio ha sido reservado con éxito.`,
       attachments: [
         {
           filename: 'reserva_cita.ics',
-          content: btoa(icsContent),
+          content: icsContent, // Enviar como texto plano, la SDK de Resend lo maneja
         },
       ],
     });
 
+    console.log("Respuesta de Resend:", emailResponse);
+
+    if (emailResponse.error) {
+      console.error("❌ Error de Resend:", emailResponse.error);
+      throw new Error(`Resend Error: ${emailResponse.error.message}`);
+    }
 
     return new Response(JSON.stringify(emailResponse), {
       headers: { "Content-Type": "application/json" },
@@ -81,7 +87,8 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("❌ Exception atrapada:", error);
+    return new Response(JSON.stringify({ error: error.message || error }), {
       headers: { "Content-Type": "application/json" },
       status: 500,
     });
