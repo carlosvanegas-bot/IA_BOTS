@@ -404,7 +404,17 @@
                 </div>
             </div>
         </div>
-    <script src="config.js"></script>
+    <!-- Dev local: config.js carga las credenciales reales -->
+    <script src="config.js" onerror=""></script>
+    <!-- Producción: el workflow reemplaza los placeholders via sed antes del deploy -->
+    <script>
+        if (!window.CONFIG) {
+            window.CONFIG = {
+                SUPABASE_URL: 'https://krrnyfepozkjumswvqwy.supabase.co',
+                SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtycm55ZmVwb3pranVtc3d2cXd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxMjc1ODQsImV4cCI6MjA5MTcwMzU4NH0.BMRcWArsUbB5ei2gjQLqmNx74RZhdnqKz0yb_LVaP70'
+            };
+        }
+    </script>
     </div>
 
     <!-- Calendar JS Logic -->
