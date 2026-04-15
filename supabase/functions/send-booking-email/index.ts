@@ -75,25 +75,6 @@ serve(async (req) => {
     });
 
 
-    // Notificación para el administrador (mantenida por seguridad)
-    await resend.emails.send({
-      from: 'IA Gems Notifier <reservas@direktio.com>',
-      to: 'carlos.vanegas@direktio.com',
-      subject: `NUEVA RESERVA: ${subject} (${attendee_email})`,
-      html: `
-        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; border-left: 5px solid #39FF14;">
-          <h2 style="color: #39FF14;">¡Nueva reserva detectada!</h2>
-          <p>Se ha registrado una nueva cita en el sistema:</p>
-          <ul>
-            <li><strong>Cliente:</strong> ${attendee_email}</li>
-            <li><strong>Asunto:</strong> ${subject}</li>
-            <li><strong>Fecha:</strong> ${manualFormattedDate} (Bogotá)</li>
-          </ul>
-
-        </div>
-      `,
-    });
-
     return new Response(JSON.stringify(emailResponse), {
       headers: { "Content-Type": "application/json" },
       status: 200,
