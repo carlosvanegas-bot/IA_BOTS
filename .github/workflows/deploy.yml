@@ -20,21 +20,28 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "⚠️ WARNING: GitHub Secrets SUPABASE_URL o SUPABASE_KEY no están configurados."
+            echo "El sitio se desplegará pero Supabase no funcionará."
+          fi
           printf 'window.CONFIG = {\n  SUPABASE_URL: "%s",\n  SUPABASE_KEY: "%s"\n};\n' "$SUPABASE_URL" "$SUPABASE_KEY" > config.js
+
+      - name: Remove config.js from .gitignore (runner-only, not committed)
+        run: |
+          sed -i '/config\.js/d' .gitignore
+          echo "✅ config.js eliminado de .gitignore en el runner para incluirlo en el deploy"
 
       - name: Verify config.js was created
         run: |
           if [ ! -f config.js ]; then
-            echo "ERROR: config.js was not created!"
+            echo "❌ ERROR: config.js no fue creado"
             exit 1
           fi
-          echo "config.js created successfully:"
-          cat config.js
+          echo "✅ config.js creado correctamente (primera línea):"
+          head -1 config.js
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: .
           branch: gh-pages
-          clean-exclude: |
-            .nojekyll
