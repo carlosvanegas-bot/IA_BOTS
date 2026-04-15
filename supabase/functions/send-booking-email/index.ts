@@ -64,16 +64,20 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Direktio <reservas@direktio.com>',
-        to: [attendee_email],
-        subject: 'Reserva Confirmada en Direktio IA Gems',
-        html: `Hola, hemos recibido tu solicitud. Tu espacio ha sido reservado con exito.`,
-        attachments: [
-          {
-            filename: 'reserva_cita.ics',
-            content: btoa(icsContent)
-          }
-        ]
+        from: 'IA Gems Notifier <reservas@direktio.com>',
+        to: ['carlos.vanegas@direktio.com'],
+        subject: `NUEVA RESERVA: ${subject} (${attendee_email})`,
+        html: `
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; border-left: 5px solid #39FF14;">
+          <h2 style="color: #39FF14;">¡Nueva reserva detectada!</h2>
+          <p>Se ha registrado una nueva cita en el sistema:</p>
+          <ul>
+            <li><strong>Cliente:</strong> ${attendee_email}</li>
+            <li><strong>Asunto:</strong> ${subject}</li>
+            <li><strong>Fecha:</strong> ${manualFormattedDate} (Bogotá)</li>
+          </ul>
+        </div>
+        `
       }),
     });
 
