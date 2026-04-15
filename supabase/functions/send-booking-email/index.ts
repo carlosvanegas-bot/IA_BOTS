@@ -1,7 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { Resend } from "npm:resend";
-
-const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 serve(async (req) => {
   // Solo permitir POST
@@ -35,9 +32,6 @@ serve(async (req) => {
     hours = hours % 12;
     hours = hours ? hours : 12; 
 
-    const manualFormattedDate = `${day} de ${month} de ${year}, ${hours}:${minutes} ${ampm}`;
-
-
     // Formatear fecha para ICS: YYYYMMDDTHHMMSSZ
     const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
@@ -54,34 +48,43 @@ serve(async (req) => {
       `DTEND:${formatDate(endDate)}`,
       `SUMMARY:${subject}`,
       `ORGANIZER;CN="Direktio":mailto:reservas@direktio.com`,
-      'DESCRIPTION:Tu espacio ha sido reservado con éxito en Direktio IA Gems.',
+      'DESCRIPTION:Tu espacio ha sido reservado con exito en Direktio IA Gems.',
       'LOCATION:Virtual / Online',
       `ATTENDEE;RSVP=TRUE:mailto:${attendee_email}`,
       'END:VEVENT',
       'END:VCALENDAR'
     ].join('\r\n');
 
-    const emailResponse = await resend.emails.send({
-      from: 'Direktio <reservas@direktio.com>',
-      to: attendee_email,
-      subject: 'Reserva Confirmada en Direktio IA Gems',
-      html: `Hola, hemos recibido tu solicitud. Tu espacio ha sido reservado con éxito.`,
-      attachments: [
-        {
-          filename: 'reserva_cita.ics',
-          content: icsContent, // Enviar como texto plano, la SDK de Resend lo maneja
-        },
-      ],
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'Direktio <reservas@direktio.com>',
+        to: [attendee_email],
+        subject: 'Reserva Confirmada en Direktio IA Gems',
+        html: `Hola, hemos recibido tu solicitud. Tu espacio ha sido reservado con exito.`,
+        attachments: [
+          {
+            filename: 'reserva_cita.ics',
+            content: btoa(icsContent)
+          }
+        ]
+      }),
     });
 
-    console.log("Respuesta de Resend:", emailResponse);
+    const data = await res.json();
+    console.log("Resend API Response:", data);
 
-    if (emailResponse.error) {
-      console.error("❌ Error de Resend:", emailResponse.error);
-      throw new Error(`Resend Error: ${emailResponse.error.message}`);
+    if (!res.ok) {
+      throw new Error(data.message || 'Error enviando el correo con Resend');
     }
 
-    return new Response(JSON.stringify(emailResponse), {
+    return new Response(JSON.stringify(data), {
       headers: { "Content-Type": "application/json" },
       status: 200,
     });
