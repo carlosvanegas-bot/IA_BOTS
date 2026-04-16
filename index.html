@@ -375,7 +375,7 @@
                                 <option value="" disabled selected>Choose a time slot</option>
                                 <option value="09:00 AM">09:00 AM</option>
                                 <option value="10:00 AM">10:00 AM</option>
-                                <option value="11:30 AM">11:30 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
                                 <option value="02:00 PM">02:00 PM</option>
                                 <option value="04:00 PM">04:00 PM</option>
                             </select>
@@ -397,8 +397,8 @@
                         </div>
                         <button type="submit" class="btn-confirm-booking">Confirm Booking</button>
                         <div id="bookingSuccessMessage" style="display: none; margin-top: 15px; padding: 12px; border-radius: 8px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); color: #00E5FF; font-size: 0.85rem; text-align: center; animation: slideUp 0.3s ease;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                            ¡Correo de confirmación enviado con tu invitación!
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            ¡Reserva confirmada exitosamente!
                         </div>
                     </form>
                 </div>
@@ -522,7 +522,7 @@
             const ALL_TIME_SLOTS = [
                 "09:00 AM",
                 "10:00 AM",
-                "11:30 AM",
+                "11:00 AM",
                 "02:00 PM",
                 "04:00 PM"
             ];
@@ -588,19 +588,12 @@
                     const dotsContainer = document.createElement('div');
                     dotsContainer.className = 'dots-container';
                     
-                    // Cap visual dots to 3 to prevent overflow
-                    const numDots = Math.min(allBookings[dateKey].length, 3);
-                    for(let i=0; i<numDots; i++) {
+                    // Show one dot per booking, up to 5 (max slots)
+                    const numDots = Math.min(allBookings[dateKey].length, 5);
+                    for (let i = 0; i < numDots; i++) {
                         const dot = document.createElement('div');
                         dot.className = 'busy-dot';
                         dotsContainer.appendChild(dot);
-                    }
-                    if (allBookings[dateKey].length > 3) {
-                        const plusSign = document.createElement('span');
-                        plusSign.textContent = '+';
-                        plusSign.style.fontSize = '8px';
-                        plusSign.style.lineHeight = '1';
-                        dotsContainer.appendChild(plusSign);
                     }
 
                     dayDiv.appendChild(dotsContainer);
