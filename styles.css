@@ -750,3 +750,187 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6);
 }
+/* =========================================
+   LOGIN SCREEN
+   ========================================= */
+
+#login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 50%, var(--bg-dark) 0%, var(--bg-obsidian) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+#login-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(57, 255, 20, 0.05) inset;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(57, 255, 20, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.login-card h2 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.login-card h2 span {
+    color: #39FF14;
+    text-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+}
+
+.login-card p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.login-input-group {
+    text-align: left;
+}
+
+.login-input-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.6rem;
+}
+
+.login-input-group input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.login-input-group input:focus {
+    border-color: #39FF14;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+.login-hint {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.btn-magic-link {
+    background: linear-gradient(135deg, #39FF14, #00FFAD);
+    color: #050408;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(57, 255, 20, 0.2);
+}
+
+.btn-magic-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(57, 255, 20, 0.4);
+}
+
+.btn-magic-link:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-message {
+    margin-top: 1.5rem;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.login-message.success {
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    color: #39FF14;
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.login-message.error {
+    background: rgba(255, 60, 60, 0.1);
+    border: 1px solid rgba(255, 60, 60, 0.3);
+    color: #ff6b6b;
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logout Button */
+.logout-btn {
+    margin-top: auto;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    color: #ff4757;
+    filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.4));
+}
+
+#app-wrapper {
+    transition: opacity 0.5s ease;
+}
+
+#app-wrapper.hidden {
+    opacity: 0;
+    pointer-events: none;
+}

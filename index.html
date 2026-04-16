@@ -18,6 +18,7 @@
         <div class="noise"></div>
     </div>
 
+    <div id="app-wrapper" class="hidden">
     <div class="app-container">
         <!-- Sidebar -->
         <nav class="sidebar">
@@ -38,6 +39,9 @@
             </div>
             <div class="nav-item">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div class="nav-item logout-btn" id="logout-btn" title="Cerrar Sesión">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
             </div>
         </nav>
 
@@ -265,6 +269,31 @@
 
         </main>
     </div>
+    </div> <!-- End #app-wrapper -->
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>IA <span>BOTS</span></h2>
+            <p>Accede a tu cuenta</p>
+            
+            <form class="login-form" id="login-form">
+                <div class="login-input-group">
+                    <label for="login-email">Correo Electrónico</label>
+                    <input type="email" id="login-email" placeholder="tu@correo.com" required 
+                           pattern="[a-zA-Z0-9._%+\-]+@(direktio\.com|katiahealth\.com)"
+                           title="Solo se permiten correos @direktio.com o @katiahealth.com">
+                    <p class="login-hint">Solo dominios @direktio.com o @katiahealth.com</p>
+                </div>
+                
+                <button type="submit" class="btn-magic-link" id="btn-magic-link">
+                    Enviar Enlace Mágico
+                </button>
+            </form>
+            
+            <div id="login-message" class="login-message"></div>
+        </div>
+    </div>
 
     <!-- Neural Network Background Animation Script -->
     <script>
@@ -408,9 +437,9 @@
                 </div>
             </div>
         </div>
-    <!-- Dev local: config.js carga las credenciales reales -->
-    <script src="config.js" onerror=""></script>
-    <!-- Producción: el workflow reemplaza los placeholders via sed antes del deploy -->
+
+    <!-- Supabase Configuration & Initialization -->
+    <script src="config.js"></script>
     <script>
         if (!window.CONFIG) {
             window.CONFIG = {
@@ -418,11 +447,7 @@
                 SUPABASE_KEY: '__SUPABASE_KEY__'
             };
         }
-    </script>
-    </div>
 
-    <!-- Calendar JS Logic -->
-    <script>
         let supabaseDb = null;
         try {
             const supabaseUrl = window.CONFIG?.SUPABASE_URL;
@@ -438,7 +463,93 @@
         } catch(e) {
             console.error('❌ Error inicializando Supabase:', e);
         }
+    </script>
 
+    <!-- Supabase Auth Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loginScreen = document.getElementById('login-screen');
+            const appWrapper = document.getElementById('app-wrapper');
+            const loginForm = document.getElementById('login-form');
+            const loginEmailInput = document.getElementById('login-email');
+            const loginMessage = document.getElementById('login-message');
+            const btnMagicLink = document.getElementById('btn-magic-link');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            if (!supabaseDb) {
+                console.error('Supabase no está inicializado.');
+                return;
+            }
+
+            // 1. Manejo del Estado de la Sesión
+            supabaseDb.auth.onAuthStateChange((event, session) => {
+                console.log('Auth State Change:', event, session);
+                if (session) {
+                    // Usuario logueado
+                    loginScreen.classList.add('hidden');
+                    appWrapper.classList.remove('hidden');
+                    // Cargar datos si es necesario
+                    fetchBookings();
+                } else {
+                    // Usuario no logueado
+                    loginScreen.classList.remove('hidden');
+                    appWrapper.classList.add('hidden');
+                }
+            });
+
+            // 2. Lógica del Magic Link
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = loginEmailInput.value.trim();
+
+                // Validación de dominio (adicional a la del HTML)
+                if (!/@(direktio\.com|katiahealth\.com)$/.test(email)) {
+                    showLoginMessage('Solo se permiten correos @direktio.com o @katiahealth.com', 'error');
+                    return;
+                }
+
+                btnMagicLink.disabled = true;
+                const originalText = btnMagicLink.textContent;
+                btnMagicLink.textContent = 'Enviando...';
+
+                try {
+                    const { error } = await supabaseDb.auth.signInWithOtp({ 
+                        email: email,
+                        options: {
+                            emailRedirectTo: window.location.origin
+                        }
+                    });
+
+                    if (error) throw error;
+
+                    showLoginMessage('¡Enlace enviado! Revisa tu bandeja de entrada o carpeta de Spam.', 'success');
+                } catch (err) {
+                    console.error('Login Error:', err);
+                    showLoginMessage('Error: ' + err.message, 'error');
+                } finally {
+                    btnMagicLink.disabled = false;
+                    btnMagicLink.textContent = originalText;
+                }
+            });
+
+            // 3. Cerrar Sesión
+            logoutBtn.addEventListener('click', async () => {
+                if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                    const { error } = await supabaseDb.auth.signOut();
+                    if (error) console.error('Logout Error:', error);
+                }
+            });
+
+            function showLoginMessage(text, type) {
+                loginMessage.textContent = text;
+                loginMessage.className = 'login-message ' + type;
+                loginMessage.style.display = 'block';
+            }
+        });
+    </script>
+
+    <!-- Calendar JS Logic -->
+    <script>
         // State - Format: bookings[YYYY-MM-DD] = array of booking objects { time, subject, email }
 
         let allBookings = {};
