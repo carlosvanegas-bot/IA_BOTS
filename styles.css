@@ -805,7 +805,7 @@ body {
 }
 
 .login-logo img {
-    height: 65px;
+    height: 50px;
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.3));
