@@ -392,7 +392,11 @@
                             <label>Attendee Email</label>
                             <div class="input-with-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                <input type="email" id="bookingEmail" placeholder="name@company.com" required>
+                                <input type="email" id="bookingEmail" placeholder="name@direktio.com" required
+                                    pattern="[a-zA-Z0-9._%+\-]+@(direktio\.com|katiahealth\.com)">
+                            </div>
+                            <div id="emailDomainError" style="display:none; margin-top:6px; padding:8px 12px; border-radius:8px; background:rgba(255,60,60,0.12); border:1px solid rgba(255,60,60,0.4); color:#ff6b6b; font-size:0.8rem;">
+                                ⚠️ Solo se permiten correos <strong>@direktio.com</strong> o <strong>@katiahealth.com</strong>
                             </div>
                         </div>
                         <button type="submit" class="btn-confirm-booking">Confirm Booking</button>
@@ -662,6 +666,19 @@
                 }
             }
 
+            // Real-time domain validation on email input
+            document.getElementById('bookingEmail').addEventListener('input', function() {
+                const val = this.value;
+                const errEl = document.getElementById('emailDomainError');
+                if (val && !/@(direktio\.com|katiahealth\.com)$/.test(val)) {
+                    errEl.style.display = 'block';
+                    this.style.borderColor = 'rgba(255,60,60,0.6)';
+                } else {
+                    errEl.style.display = 'none';
+                    this.style.borderColor = '';
+                }
+            });
+
             // Handle Booking Submit
             bookingForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -676,12 +693,21 @@
                         timeErrEl.style.display = 'block';
                         setTimeout(() => { timeErrEl.style.display = 'none'; }, 3000);
                     }
-                    // Scroll to top to show time selector
                     e.target.scrollTop = 0;
                     return;
                 }
+
+                // Domain validation on submit
+                const emailErrEl = document.getElementById('emailDomainError');
+                if (!/@(direktio\.com|katiahealth\.com)$/.test(email)) {
+                    emailErrEl.style.display = 'block';
+                    document.getElementById('bookingEmail').style.borderColor = 'rgba(255,60,60,0.6)';
+                    return;
+                }
+
                 if (!selectedDateStr) return;
                 if (timeErrEl) timeErrEl.style.display = 'none';
+                if (emailErrEl) emailErrEl.style.display = 'none';
                 
                 const btn = bookingForm.querySelector('button[type="submit"]');
                 const origText = btn.textContent;
