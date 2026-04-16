@@ -915,15 +915,29 @@ body {
 }
 
 /* Logout Button */
-.logout-btn {
-    margin-top: auto;
-    color: var(--text-muted);
+.logout-btn-fixed {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    color: #39FF14;
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.4);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4000;
     transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
 }
 
-.logout-btn:hover {
-    color: #ff4757;
-    filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.4));
+.logout-btn-fixed:hover {
+    transform: scale(1.1);
+    background: rgba(57, 255, 20, 0.2);
+    border-color: #39FF14;
+    filter: drop-shadow(0 0 15px rgba(57, 255, 20, 0.6));
 }
 
 #app-wrapper {
