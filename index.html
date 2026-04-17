@@ -522,7 +522,7 @@
                     const { error } = await supabaseDb.auth.signInWithOtp({ 
                         email: email,
                         options: {
-                            emailRedirectTo: window.location.origin + window.location.pathname
+                            emailRedirectTo: window.location.href.split('#')[0]
                         }
                     });
 
